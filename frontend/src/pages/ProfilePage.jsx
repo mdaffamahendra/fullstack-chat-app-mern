@@ -42,7 +42,7 @@ const ProfilePage = () => {
             <div className="relative">
               <img
                 src={
-                  selectedImage || authUser.profilePic || avatar
+                  selectedImage || authUser.profilePic || "https://res.cloudinary.com/dii5kjxvz/image/upload/v1744552874/zjijehgi7xkrwjmfrxw2.png"
                 }
                 alt="Profile"
                 className="size-32 rounded-full object-cover border-4"
