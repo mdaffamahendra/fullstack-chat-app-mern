@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Camera, User } from "lucide-react";
 import toast from "react-hot-toast";
+import avatar from "../asset/avatar.png"
 
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
@@ -41,7 +42,7 @@ const ProfilePage = () => {
             <div className="relative">
               <img
                 src={
-                  selectedImage || authUser.profilePic || "src/asset/avatar.png"
+                  selectedImage || authUser.profilePic || avatar
                 }
                 alt="Profile"
                 className="size-32 rounded-full object-cover border-4"
