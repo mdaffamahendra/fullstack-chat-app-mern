@@ -20,14 +20,14 @@ const Sidebar = () => {
 
   if (isUsersLoading) return <SidebarSkeleton />;
   return (
-    <aside className="h-full w-32 lg:w-72 flex flex-col transition-all duration-200 border-r border-base-300">
+    <aside className={`h-full ${selectedUser ? "hidden" : "w-full"} md:w-72 md:flex flex-col transition-all duration-200 border-r border-base-300`}>
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center gap-2">
           <Users className="size-6" />
-          <span className="font-medium hidden lg:block">Contacts</span>
+          <span className="font-medium block">Contacts</span>
         </div>
 
-        <div className="mt-3 hidden lg:flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
               type="checkbox"
@@ -58,7 +58,7 @@ const Sidebar = () => {
               }
             `}
           >
-            <div className="relative mx-auto lg:mx-0">
+            <div className="relative mx-0">
               <img
                 src={user.profilePic || "https://res.cloudinary.com/dii5kjxvz/image/upload/v1744552874/zjijehgi7xkrwjmfrxw2.png"}
                 alt={user.name}
@@ -73,7 +73,7 @@ const Sidebar = () => {
             </div>
 
             {/* User info - only visible on larger screens */}
-            <div className="hidden lg:block text-left min-w-0">
+            <div className="block text-left min-w-0">
               <div className="font-medium truncate">{user.fullName}</div>
               <div className="text-sm text-zinc-400">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}

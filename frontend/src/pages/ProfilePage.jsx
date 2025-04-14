@@ -97,10 +97,10 @@ const ProfilePage = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between py-2 border-b border-zinc-700">
                 <span>Member Since</span>
-                <span>{authUser?.createdAt?.split("T")[0]}</span>
+                <span>{authUser?.createdAt}</span>
               </div>
               <div className="flex items-center justify-between py-2">
-                <span>Member Since</span>
+                <span>Member Status</span>
                 <span className="text-green-500">Active</span>
               </div>
             </div>
