@@ -5,3 +5,10 @@ export const formatMessageTime = (date) => {
         hour12: false
     })
 }
+
+export const isMoreThan15MinutesAgo = (isoTimeString) => {
+    const targetTime = new Date(isoTimeString);
+    const now = new Date();
+    const diffInMinutes = (now - targetTime) / (1000 * 60);
+    return diffInMinutes > 15;
+  }

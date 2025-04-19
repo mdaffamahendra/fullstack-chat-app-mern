@@ -1,6 +1,7 @@
 import express from "express";
 import authRoutes from "./router/auth.route.js";
 import messageRoutes from "./router/message.route.js";
+import notificationsRoutes from "./router/notifications.route.js";
 import dotenv from "dotenv";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
@@ -26,6 +27,7 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/notifications", notificationsRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {

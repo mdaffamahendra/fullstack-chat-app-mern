@@ -1,18 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
 const Sidebar = () => {
-  const { getUsers, users, setSelectedUser, isUsersLoading, selectedUser } =
-    useChatStore();
-  const { onlineUsers } = useAuthStore();
+  const {
+    getUsers,
+    users,
+    setSelectedUser,
+    isUsersLoading,
+    selectedUser,
+    subscribeNotifications,
+    notifications,
+    unsubscribeToNotif,
+    fetchNotifications
+  } = useChatStore();
+  const { onlineUsers, socket } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
   useEffect(() => {
     getUsers();
   }, [getUsers]);
+
+  const hasSubscribed = useRef(false);
+
+  useEffect(() => {
+    if (socket && !hasSubscribed.current) {
+      fetchNotifications();
+      subscribeNotifications();
+      hasSubscribed.current = true;
+    }
+  
+    return () => {
+      unsubscribeToNotif();
+      hasSubscribed.current = false;
+    };
+  }, [socket, fetchNotifications, subscribeNotifications]);
 
   const filteredusers = showOnlineOnly
     ? users.filter((user) => onlineUsers.includes(user._id))
@@ -20,7 +44,11 @@ const Sidebar = () => {
 
   if (isUsersLoading) return <SidebarSkeleton />;
   return (
-    <aside className={`h-full ${selectedUser ? "hidden" : "w-full"} md:w-72 md:flex flex-col transition-all duration-200 border-r border-base-300`}>
+    <aside
+      className={`h-full ${
+        selectedUser ? "hidden" : "w-full"
+      } md:w-72 md:flex flex-col transition-all duration-200 border-r border-base-300`}
+    >
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center gap-2">
           <Users className="size-6" />
@@ -60,7 +88,10 @@ const Sidebar = () => {
           >
             <div className="relative mx-0">
               <img
-                src={user.profilePic || "https://res.cloudinary.com/dii5kjxvz/image/upload/v1744552874/zjijehgi7xkrwjmfrxw2.png"}
+                src={
+                  user.profilePic ||
+                  "https://res.cloudinary.com/dii5kjxvz/image/upload/v1744552874/zjijehgi7xkrwjmfrxw2.png"
+                }
                 alt={user.name}
                 className="size-12 object-cover rounded-full"
               />
@@ -74,7 +105,14 @@ const Sidebar = () => {
 
             {/* User info - only visible on larger screens */}
             <div className="block text-left min-w-0">
-              <div className="font-medium truncate">{user.fullName}</div>
+              <div className="font-medium truncate flex">
+                {user.fullName}
+                {notifications[user._id] > 0 && (
+                  <div className="ml-2 text-zinc-400 font-medium truncate">
+                    {notifications[user._id]}
+                  </div>
+                )}
+              </div>
               <div className="text-sm text-zinc-400">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
