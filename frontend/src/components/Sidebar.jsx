@@ -14,7 +14,7 @@ const Sidebar = () => {
     subscribeNotifications,
     notifications,
     unsubscribeToNotif,
-    fetchNotifications
+    fetchNotifications,
   } = useChatStore();
   const { onlineUsers, socket } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
@@ -31,7 +31,7 @@ const Sidebar = () => {
       subscribeNotifications();
       hasSubscribed.current = true;
     }
-  
+
     return () => {
       unsubscribeToNotif();
       hasSubscribed.current = false;
@@ -104,18 +104,20 @@ const Sidebar = () => {
             </div>
 
             {/* User info - only visible on larger screens */}
-            <div className="block text-left min-w-0">
-              <div className="font-medium truncate flex">
-                {user.fullName}
+            <div className="block text-left min-w-0 flex-1">
+              <div className="flex items-center justify-between">
+                <p className="font-medium truncate text-primary-content">
+                  {user.fullName}
+                </p>
                 {notifications[user._id] > 0 && (
-                  <div className="ml-2 text-zinc-400 font-medium truncate">
+                  <div className="ml-2 min-w-[24px] h-6 px-2 text-xs font-bold bg-primary text-primary-content  rounded-full flex items-center justify-center shadow-md">
                     {notifications[user._id]}
                   </div>
                 )}
               </div>
-              <div className="text-sm text-zinc-400">
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
-              </div>
+              </p>
             </div>
           </button>
         ))}
