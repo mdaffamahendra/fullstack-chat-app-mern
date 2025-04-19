@@ -106,7 +106,7 @@ const Sidebar = () => {
             {/* User info - only visible on larger screens */}
             <div className="block text-left min-w-0 flex-1">
               <div className="flex items-center justify-between">
-                <p className="font-medium truncate text-primary-content">
+                <p className="font-medium truncate">
                   {user.fullName}
                 </p>
                 {notifications[user._id] > 0 && (

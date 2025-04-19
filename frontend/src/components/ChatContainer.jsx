@@ -191,12 +191,12 @@ const ChatContainer = () => {
             </div>
 
             {/* Read status */}
-            {message.senderId === authUser._id && (
+            {/* {message.senderId === authUser._id && (
               <div className="chat-footer opacity-50 text-xs flex items-center mt-1">
                 <CheckCheck className="size-3 mr-1" />
                 Dibaca
               </div>
-            )}
+            )} */}
           </div>
         ))}
       </div>
