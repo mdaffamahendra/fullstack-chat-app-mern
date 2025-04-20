@@ -97,8 +97,7 @@ export const useRequestStore = create((set, get) => ({
   // DELETE: Cancel or delete request
   deleteFriendRequest: async (requestId) => {
     try {
-      const res = await axiosInstance.delete(`/request/delete/${requestId}`);
-      toast.success(res.data.msg);
+      await axiosInstance.delete(`/request/delete/${requestId}`);
       get().fetchRequestsFromMe();
       get().fetchRequestsFromUser();
     } catch (err) {
