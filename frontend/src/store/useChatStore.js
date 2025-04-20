@@ -6,14 +6,13 @@ import showMessageNotification from "../components/ToastNotificationsChat.jsx";
 
 export const useChatStore = create((set, get) => ({
   messages: [],
-  users: [],
   selectedUser: null,
-  isUsersLoading: false,
   isMessagesLoading: true,
   isDeleteMessageLoading: true,
   isEditMessageLoading: true,
   editMessageAction: false,
   messageId: null,
+  navigate: null,
   notifications: {}, // key = userId pengirim, value = jumlah pesan
 
   incrementNotif: (fromUserId) => {
@@ -59,18 +58,6 @@ export const useChatStore = create((set, get) => ({
       console.log("Kehapus semua notifnya");
     } catch (err) {
       console.log("Gagal mark notif as read:", err);
-    }
-  },
-
-  getUsers: async () => {
-    set({ isUsersLoading: true });
-    try {
-      const res = await axiosInstance.get("/messages/users");
-      set({ users: res.data });
-    } catch (error) {
-      toast.error(error.response.data.message);
-    } finally {
-      set({ isUsersLoading: false });
     }
   },
 
@@ -141,6 +128,7 @@ export const useChatStore = create((set, get) => ({
 
   subscribeNotifications: () => {
     const socket = useAuthStore.getState().socket;
+    socket.off("newNotif");
 
     socket.on("newNotifications", (populatedNotif) => {
       console.log("selectedUser:", get().selectedUser?._id);
@@ -149,14 +137,18 @@ export const useChatStore = create((set, get) => ({
       if (populatedNotif.senderId._id !== get().selectedUser?._id) {
         console.log("should call incrementNotif()");
         get().incrementNotif(populatedNotif.senderId._id);
-        showMessageNotification(populatedNotif, get().setSelectedUser);
+        showMessageNotification(populatedNotif, get().setSelectedUser, get().navigate);
       }
     });
   },
 
+  setNavigate: (navigateFn) => set({ navigate: navigateFn }),
+
   unsubscribeToNotif: () => {
     const socket = useAuthStore.getState().socket;
-    socket.off("newNotif");
+    if (socket) {
+      socket.off("newNotif");
+    }
   },
 
   subscribeToMessages: () => {
@@ -193,15 +185,14 @@ export const useChatStore = create((set, get) => ({
 
   setSelectedUser: async (selectedUser) => {
     set({ selectedUser });
-    
   },
-  handleCloseChat : () => {
+  handleCloseChat: () => {
     const currentUserId = get().selectedUser?._id;
-  
+
     if (currentUserId) {
       get().clearNotif(currentUserId);
     }
-  
+
     get().setSelectedUser(null);
   },
   setMessageId: (messageId) => set({ messageId }),

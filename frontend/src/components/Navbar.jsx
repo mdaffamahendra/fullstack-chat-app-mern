@@ -1,10 +1,18 @@
 import React from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
-import { LogOut, MessageSquare, Settings, User } from "lucide-react";
+import {
+  LogOut,
+  MessageSquare,
+  NotebookIcon,
+  Settings,
+  User,
+} from "lucide-react";
+import { useRequestStore } from "../store/useRequestStore";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
+    const {requestsFromUser} = useRequestStore();
   return (
     <header className="border-b border-base-300 fixed w-full top-0 z-40 backdrop-blur-lg bg-base-100/80">
       <div className="container mx-auto px-4 h-16">
@@ -32,17 +40,21 @@ const Navbar = () => {
 
             {authUser && (
               <>
-                <Link
-                  to={"/profile"}
-                  className="btn btn-sm gap-2"
-                >
+                <Link to="/request" className="btn btn-sm gap-2 relative">
+                  <NotebookIcon className="size-5" />
+                  <span className="hidden sm:inline">Request</span>
+
+                  {requestsFromUser.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-error text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                      {requestsFromUser.length}
+                    </span>
+                  )}
+                </Link>
+                <Link to={"/profile"} className="btn btn-sm gap-2">
                   <User className="size-5" />
                   <span className="hidden sm:inline">Profile</span>
                 </Link>
-                <button
-                  className="flex gap-2 items-center"
-                  onClick={logout}
-                >
+                <button className="flex gap-2 items-center" onClick={logout}>
                   <LogOut className="size-5" />
                   <span className="hidden sm:inline">Logout</span>
                 </button>

@@ -2,7 +2,7 @@ import React from "react";
 import toast from "react-hot-toast";
 import { PictureInPicture } from "lucide-react";
 
-const showMessageNotification = (notif, setSelectedUser) => {
+const showMessageNotification = (notif, setSelectedUser, navigate) => {
   toast.custom((t) => (
     <div
       className={`${
@@ -35,6 +35,7 @@ const showMessageNotification = (notif, setSelectedUser) => {
       <div className="ml-4 flex-shrink-0 flex items-center">
         <button
           onClick={() => {
+            navigate("/");
             setSelectedUser(notif.senderId);
             toast.dismiss(t.id);
           }}
