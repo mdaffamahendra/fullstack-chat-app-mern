@@ -10,11 +10,16 @@ export const postRequest = async (req, res) => {
 
     if (!receiver) return res.status(404).json({ msg: "User not found" });
     if (receiver._id.equals(senderId)) {
-        return res.status(400).json({ msg: "Cant send to own email" });
-      }
+      return res.status(400).json({ msg: "Cant send to own email" });
+    }
+    if (receiver.friends.includes(senderId)) {
+      return res.status(400).json({
+        msg: "This user is already your friend",
+      });
+    }
 
-    console.log("Receiver ID", receiver._id)
-    console.log("sender Id", senderId)
+    console.log("Receiver ID", receiver._id);
+    console.log("sender Id", senderId);
 
     const existingRequest = await Request.findOne({
       $or: [
@@ -97,8 +102,8 @@ export const rejectRequest = async (req, res) => {
     const { requestId } = req.body;
 
     const request = await Request.findById(requestId)
-    .populate("sender", "fullName email profilePic")
-    .populate("receiver", "fullName email profilePic");
+      .populate("sender", "fullName email profilePic")
+      .populate("receiver", "fullName email profilePic");
     if (!request) return res.status(404).json({ msg: "Request not found" });
 
     request.status = "rejected";
