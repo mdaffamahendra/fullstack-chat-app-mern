@@ -49,9 +49,8 @@ const ProfilePage = () => {
               />
               <label
                 htmlFor="avatar-upload"
-                className={`absolute bottom-0 right-0 bg-base-content hover:scale-105 p-2 rounded-full cursor-pointer transition-all duration-200 ${
-                  isUpdatingProfile ? "animate-pulse pointer-events-none" : ""
-                }`}
+                className={`absolute bottom-0 right-0 bg-base-content hover:scale-105 p-2 rounded-full cursor-pointer transition-all duration-200 ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""
+                  }`}
               >
                 <Camera className="w-5 h-5 text-base-200" />
                 <input
@@ -97,7 +96,15 @@ const ProfilePage = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between py-2 border-b border-zinc-700">
                 <span>Member Since</span>
-                <span>{authUser?.createdAt}</span>
+                <span>
+                  {authUser?.createdAt ? new Date(authUser.createdAt).toLocaleString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }) : 'Belum terdaftar'}
+                </span>
               </div>
               <div className="flex items-center justify-between py-2">
                 <span>Member Status</span>

@@ -4,8 +4,7 @@ import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 import { useChatStore } from "./useChatStore";
 
-const BASE_URL =
-  import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
+const BASE_URL = "https://be-chatty.belanjamu.me/api";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -38,7 +37,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Account created successfully!");
       get().connectSocket();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || error.message || "Failed to sign up");
     } finally {
       set({ isSigningUp: false });
     }
@@ -52,7 +51,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Logged in successfully!");
       get().connectSocket();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || error.message || "Failed to login");
     } finally {
       set({ isLoggingIng: false });
     }
@@ -80,7 +79,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.log("Error updating profile");
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || error.message || "Failed to update profile");
     } finally {
       set({ isUpdatingProfile: false });
     }
@@ -89,7 +88,8 @@ export const useAuthStore = create((set, get) => ({
   connectSocket: () => {
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
-    const socket = io(BASE_URL, {
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || "http://localhost:5001";
+    const socket = io(socketUrl, {
       query: {
         userId: authUser._id,
       },
